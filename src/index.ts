@@ -165,6 +165,28 @@ export function useStaggeredEntrance(index: number, delay = 80) {
   return { style };
 }
 
+// === Bounce ===
+
+export function useBounce(initialScale = 1) {
+  const scale = useSharedValue(initialScale);
+
+  const bounce = useCallback(
+    (config?: SpringConfig) => {
+      scale.value = withSequence(
+        withSpring(0.9, { damping: 4, stiffness: 300 }),
+        withSpring(initialScale, { ...defaultSpring, ...config })
+      );
+    },
+    [scale, initialScale]
+  );
+
+  const style = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  return { scale, bounce, style };
+}
+
 // === Rotate ===
 
 export function useRotation() {
@@ -200,6 +222,7 @@ export default {
   useScale,
   useSlide,
   useShake,
+  useBounce,
   useStaggeredEntrance,
   useRotation,
 };
