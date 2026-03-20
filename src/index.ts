@@ -217,6 +217,32 @@ export function useRotation() {
   return { rotation, rotateTo, spin, style };
 }
 
+// === Flip ===
+
+export function useFlip() {
+  const rotateY = useSharedValue(0);
+
+  const flipIn = useCallback(
+    (config?: TimingConfig) => {
+      rotateY.value = withTiming(0, { ...defaultTiming, ...config });
+    },
+    [rotateY]
+  );
+
+  const flipOut = useCallback(
+    (config?: TimingConfig) => {
+      rotateY.value = withTiming(180, { ...defaultTiming, ...config });
+    },
+    [rotateY]
+  );
+
+  const style = useAnimatedStyle(() => ({
+    transform: [{ perspective: 800 }, { rotateY: `${rotateY.value}deg` }],
+  }));
+
+  return { rotateY, flipIn, flipOut, style };
+}
+
 export default {
   useFade,
   useScale,
@@ -225,4 +251,5 @@ export default {
   useBounce,
   useStaggeredEntrance,
   useRotation,
+  useFlip,
 };
