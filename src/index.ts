@@ -217,6 +217,22 @@ export function useRotation() {
   return { rotation, rotateTo, spin, style };
 }
 
+// === Color Interpolation ===
+
+export function useColorFade(fromColor: string, toColor: string) {
+  const progress = useSharedValue(0);
+
+  const toStart = useCallback(() => {
+    progress.value = withTiming(0, { duration: 300 });
+  }, [progress]);
+
+  const toEnd = useCallback(() => {
+    progress.value = withTiming(1, { duration: 300 });
+  }, [progress]);
+
+  return { progress, toStart, toEnd };
+}
+
 // === Flip ===
 
 export function useFlip() {
