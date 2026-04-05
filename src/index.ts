@@ -259,6 +259,37 @@ export function useFlip() {
   return { rotateY, flipIn, flipOut, style };
 }
 
+// === Typewriter ===
+
+export function useTypewriter(text: string, speed = 50) {
+  const progress = useSharedValue(0);
+  const charCount = text.length;
+
+  const start = useCallback(() => {
+    progress.value = 0;
+    progress.value = withTiming(charCount, {
+      duration: charCount * speed,
+      easing: Easing.linear,
+    });
+  }, [progress, charCount, speed]);
+
+  const reset = useCallback(() => {
+    progress.value = 0;
+  }, [progress]);
+
+  return { progress, start, reset, charCount };
+}
+
+// === Parallax ===
+
+export function useParallax(scrollOffset: { value: number }, factor = 0.5) {
+  const style = useAnimatedStyle(() => ({
+    transform: [{ translateY: scrollOffset.value * factor }],
+  }));
+
+  return { style };
+}
+
 export default {
   useFade,
   useScale,
@@ -268,4 +299,6 @@ export default {
   useStaggeredEntrance,
   useRotation,
   useFlip,
+  useTypewriter,
+  useParallax,
 };
