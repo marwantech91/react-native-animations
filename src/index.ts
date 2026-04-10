@@ -290,6 +290,26 @@ export function useParallax(scrollOffset: { value: number }, factor = 0.5) {
   return { style };
 }
 
+// === Press Feedback ===
+
+export function usePressFeedback(scaleDown = 0.95) {
+  const scale = useSharedValue(1);
+
+  const onPressIn = useCallback(() => {
+    scale.value = withSpring(scaleDown, { damping: 15, stiffness: 300 });
+  }, [scale, scaleDown]);
+
+  const onPressOut = useCallback(() => {
+    scale.value = withSpring(1, { damping: 12, stiffness: 200 });
+  }, [scale]);
+
+  const style = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  return { onPressIn, onPressOut, style };
+}
+
 export default {
   useFade,
   useScale,
